@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paragraph and Question Answer System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #007bb5;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .question-answer {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Paragraph and Question Answer System</h1>
+    </header>
+
+    <main>
+        <h2>Enter a paragraph and a question to get an answer:</h2>
+        
+        <textarea id="inputParagraph" placeholder="Enter your paragraph here..."></textarea>
+        
+        <input type="text" id="inputQuestion" placeholder="Enter your question here...">
+        
+        <button onclick="generateAnswer()">Generate Answer</button>
+
+        <div id="output" class="output"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Paragraph and Question Answer System</p>
+    </footer>
+
+    <script>
+        function generateAnswer() {
+            const paragraph = document.getElementById("inputParagraph").value.trim();
+            const question = document.getElementById("inputQuestion").value.trim();
+            const output = document.getElementById("output");
+
+            if (!paragraph || !question) {
+                output.innerHTML = "<p>Please enter both a paragraph and a question.</p>";
+                return;
+            }
+
+            // Check if the question is related to the paragraph content
+            const lowerCaseParagraph = paragraph.toLowerCase();
+            const lowerCaseQuestion = question.toLowerCase();
+
+            // Simple question-answer matching
+            let answer = "Sorry, I couldn't find an answer to that question.";
+
+            if (lowerCaseQuestion.includes("where") && lowerCaseParagraph.includes("located")) {
+                // Looking for locations
+                answer = getLocationAnswer(paragraph);
+            } else if (lowerCaseQuestion.includes("what is") || lowerCaseQuestion.includes("what are")) {
+                // General knowledge-based questions
+                answer = getGeneralAnswer(paragraph);
+            } else if (lowerCaseQuestion.includes("who") && lowerCaseParagraph.includes("people")) {
+                // Looking for people-based questions
+                answer = getWhoAnswer(paragraph);
+            } else {
+                answer = "Sorry, I couldn't find a specific answer for your question in the paragraph.";
+            }
+
+            // Display the question and answer
+            output.innerHTML = `<strong>Q:</strong> ${question}<br><strong>A:</strong> ${answer}`;
+        }
+
+        // Example function to extract location-based information
+        function getLocationAnswer(paragraph) {
+            const locationPattern = /(?:located in|found in|situated in)\s([a-zA-Z\s]+)/;
+            const match = paragraph.match(locationPattern);
+            return match ? "It is located in " + match[1] + "." : "Sorry, the location is not mentioned in the paragraph.";
+        }
+
+        // Example function to extract a general answer based on "What is" or "What are" questions
+        function getGeneralAnswer(paragraph) {
+            return paragraph.charAt(0).toUpperCase() + paragraph.slice(1) + ".";
+        }
+
+        // Example function to extract people-based answers
+        function getWhoAnswer(paragraph) {
+            const peoplePattern = /(?:people|someone|individuals)\s([a-zA-Z\s]+)/;
+            const match = paragraph.match(peoplePattern);
+            return match ? "The people mentioned are: " + match[1] : "Sorry, no specific people are mentioned in the paragraph.";
+        }
+    </script>
+
+</body>
+</html>
